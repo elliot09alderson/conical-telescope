@@ -1,0 +1,247 @@
+/* ============================================================
+   App & Scene Layout
+   ============================================================ */
+
+.app {
+  position: relative;
+  width: 100%;
+}
+
+/* The tall invisible spacer that gives ScrollTrigger scroll room */
+.scroll-spacer {
+  position: relative;
+  width: 100%;
+  pointer-events: none;
+}
+
+/* Fixed overlay — everything visible stays here */
+.scene-fixed {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Background Layers
+   ============================================================ */
+
+.background-container {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.bg-layer {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  will-change: opacity;
+  transition: none; /* GSAP handles transitions */
+}
+
+.bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.35) 50%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+  z-index: 1;
+}
+
+/* ============================================================
+   Discover Label (left side — horizontal text)
+   ============================================================ */
+
+.discover-label {
+  position: absolute;
+  left: 3vw;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.discover-label span {
+  font-size: clamp(0.7rem, 0.9vw, 0.95rem);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 300;
+}
+
+/* ============================================================
+   Angle Indicator (SVG chevron lines)
+   ============================================================ */
+
+.angle-indicator {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Title Viewport & List (the "telescope" masked window)
+   ============================================================ */
+
+.title-viewport {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+
+  /*
+   * Clip to the inside of the angle lines.
+   * Angle vertex at (8%, 50%). Both lines are symmetric:
+   * top line hits y=0 at ~39%, bottom line hits y=100 at ~39%.
+   */
+  clip-path: polygon(
+    8% 50%,
+    39% 0%,
+    100% 0%,
+    100% 100%,
+    39% 100%
+  );
+
+  /* Gradient mask — fades titles at top and bottom edges */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 2%,
+    black 25%,
+    black 75%,
+    transparent 98%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 2%,
+    black 25%,
+    black 75%,
+    transparent 98%
+  );
+}
+
+.title-list {
+  width: 100%;
+  padding-left: 18%;
+  will-change: transform;
+}
+
+.title-item {
+  padding: 2.8vh 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 0.15;
+  transform: scale(0.95);
+  transform-origin: left center;
+}
+
+.title-item.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.title-item h2 {
+  font-size: clamp(2.5rem, 5.5vw, 5.5rem);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: #fff;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.4);
+}
+
+.title-item.active h2 {
+  font-weight: 400;
+}
+
+/* ============================================================
+   Curved Thumbnails
+   ============================================================ */
+
+.thumbnails-container {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(65px, 8vw, 120px);
+  aspect-ratio: 3 / 4;
+  border-radius: 6px;
+  overflow: hidden;
+  will-change: transform, opacity;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease;
+}
+
+.thumbnail:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ============================================================
+   Responsive Adjustments
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .title-list {
+    padding-left: 12%;
+  }
+
+  .title-item h2 {
+    font-size: clamp(1.8rem, 8vw, 3.5rem);
+  }
+
+  .thumbnail {
+    width: clamp(60px, 15vw, 100px);
+  }
+
+  .discover-label {
+    left: 1.5vw;
+  }
+
+  .discover-label span {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title-list {
+    padding-left: 8%;
+  }
+
+  .title-item {
+    padding: 1.5vh 0;
+  }
+
+  .thumbnail {
+    width: clamp(50px, 18vw, 80px);
+  }
+}
